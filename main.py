@@ -2,7 +2,7 @@ from src.Twitch import Twitch
 from src.TSfile import TSfile
 
 if __name__ == "__main__":
-    t = Twitch().downloadM3U8List("")
+    t = Twitch().downloadM3U8List("1770471662")
 
     ts = TSfile(t)
     ts.downloadTS()

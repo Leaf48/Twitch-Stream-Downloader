@@ -15,9 +15,16 @@ class TSfile:
             for line in tqdm(f):
                 duration = re.findall(r"([0-9]{1,5}).ts", line)
                 if duration:
-                    r = requests.get(self.url + "{}.ts".format(duration[0]))
-                    with open(os.path.join("./ts_files", "{}.{}".format(duration[0], "ts")), "wb") as fd:
-                        fd.write(r.content)
+                    while True:
+                        try:
+                            r = requests.get(self.url + "{}.ts".format(duration[0]))
+                            with open(os.path.join("./ts_files", "{}.{}".format(duration[0], "ts")), "wb") as fd:
+                                fd.write(r.content)
+                            break
+                        except:
+                            pass
+        print("Download Completed!")
+                                
 
 
     def mergeTS(self, path: str, outputName: str):
@@ -27,4 +34,4 @@ class TSfile:
             for i in tqdm(range(len(tsDir) - 1)):
                 dir = os.path.join("./ts_files", tsDir[i])
                 f.write(open(dir, "rb").read())
-        print("Completed merging!")
+        print("Merging Completed!")
