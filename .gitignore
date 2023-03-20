@@ -130,3 +130,4 @@ dmypy.json
 .pyre/
 *.m3u8
 *.ts
+.DS_Store
