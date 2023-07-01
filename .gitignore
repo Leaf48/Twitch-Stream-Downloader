@@ -131,3 +131,5 @@ dmypy.json
 *.m3u8
 *.ts
 .DS_Store
+*.json
+*.mp4
