@@ -51,7 +51,7 @@ class JsonManager:
     def mp4_output_file(self) -> str:
         """
         Returns:
-            str: output mp4 | e.g. ./output.mp4
+            str: output mp4 | e.g. ./original.mp4
         """
         return self.config["files"]["mp4-output-file"]
 
