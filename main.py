@@ -1,34 +1,22 @@
-from src.Twitch import Twitch
-from src.TSfile import TSfile
-import yaml
-import subprocess
-import os
+from src.Twitch import TwitchStream
+from src.TSfile import TSFileManager
 
-def yamlLoader():
-    with open("config.yaml", "r") as f:
-        config = yaml.load(f, Loader=yaml.FullLoader)
-        return config["streamId"]
-        
 
 if __name__ == "__main__":
-    config = yamlLoader()
-    
-    t = Twitch().downloadM3U8List("{}".format(config))
+    videoId = TSFileManager.yamlLoader("config.yaml")
 
-    ts = TSfile(t)
-    ts.downloadTS()
-    ts.mergeTS("./ts_files", "output.ts")
+    twitch = TwitchStream()
+    twitch_url = twitch.downloadM3U8List("{}".format(videoId))
 
-    # Start convert output.ts to output.mp4
-    command = "ffmpeg -i output.ts -c:v copy -c:a copy output.mp4"
-    res = subprocess.run(command, shell=True)
-    print(res)
-    
-    # remove all .ts file
-    for filename in os.listdir("./ts_files"):
-        if filename.endswith(".ts"):
-            os.remove("./ts_files/{}".format(filename))
-    os.remove("./output.ts")
-    os.remove("./playlist.m3u8")
+    tsm = TSFileManager(
+        url=twitch_url,
+        ts_dir="./ts_files",
+        playlist_file="./playlist.m3u8",
+        output_ts_file="./output.ts",
+        output_mp4_file="./output.mp4",
+    )
 
-    
+    tsm.downloadTS()
+    tsm.mergeTS()
+    tsm.createMP4(True)
+    tsm.deleteCache()
