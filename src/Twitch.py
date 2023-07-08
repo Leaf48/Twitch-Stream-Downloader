@@ -4,11 +4,25 @@ import json
 
 
 class TwitchStream:
-    def __init__(self) -> None:
-        self.CLIENT_ID = "kimne78kx3ncx6brgo4mv6wki5h1ko"
+    def __init__(self, videoId: str, playlist_file: str) -> None:
+        """Twitch Stream Downloader
 
-    def getToken(self, videoId: str) -> dict:
-        HEADERS = {"Client-id": self.CLIENT_ID}
+        Args:
+            videoId (str): target video-id
+            playlist_file (str): the path name to be saved | e.g. playlist.m3u8
+        """
+        self.clientId = "kimne78kx3ncx6brgo4mv6wki5h1ko"
+        self.videoId = videoId
+        # playlist.m3u8
+        self.playlist_file = playlist_file
+
+    def getToken(self) -> dict:
+        """Get token of video
+
+        Returns:
+            dict: tokens
+        """
+        HEADERS = {"Client-id": self.clientId}
 
         PAYLOAD = json.dumps(
             [
@@ -24,7 +38,7 @@ class TwitchStream:
                         "isLive": True,
                         "login": "",
                         "isVod": True,
-                        "vodID": videoId,
+                        "vodID": self.videoId,
                         "playerType": "embed",
                     },
                 }
@@ -37,10 +51,15 @@ class TwitchStream:
 
         return RESPONSE.json()[0]["data"]["videoPlaybackAccessToken"]
 
-    def downloadM3U8List(self, videoId: str) -> str:
-        VALUE = self.getToken(videoId=videoId)
+    def downloadM3U8List(self) -> str:
+        """Download m3u8 list
+
+        Returns:
+            str: base-url
+        """
+        VALUE = self.getToken()
         URL = "https://usher.ttvnw.net/vod/{}.m3u8?client_id={}&token={}&sig={}&allow_source=true&allow_audio_only=true".format(
-            videoId, self.CLIENT_ID, VALUE["value"], VALUE["signature"]
+            self.videoId, self.clientId, VALUE["value"], VALUE["signature"]
         )
         RESPONSE = requests.get(URL)
 
@@ -52,7 +71,7 @@ class TwitchStream:
                 break
 
         playlist = m3u8.load(BASE_URL)
-        playlist.dump("playlist.m3u8")
+        playlist.dump(self.playlist_file)
 
         fileName = BASE_URL[BASE_URL.rfind("/") + 1 :]
         BASE_URL = BASE_URL.replace(fileName, "")

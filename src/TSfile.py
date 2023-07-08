@@ -17,6 +17,15 @@ class TSFileManager:
         output_ts_file: str,
         output_mp4_file: str,
     ) -> None:
+        """TS file
+
+        Args:
+            url (str): base-url
+            ts_dir (str): directory that all .ts file are saved to
+            playlist_file (str): playlist.m3u8
+            output_ts_file (str): output .ts that all .ts were merged
+            output_mp4_file (str): output .mp4
+        """
         # BASEURL
         # https://...
         self.url = url
@@ -36,8 +45,8 @@ class TSFileManager:
         # ./output.mp4
         self.output_mp4_file = output_mp4_file
 
-    # Download all .ts file
     def downloadTS(self):
+        """Download all .ts file"""
         with open(self.playlist_file, "r") as f:
             for line in tqdm(f):
                 duration = re.findall(r"([0-9]{1,5}).ts", line)
@@ -57,8 +66,8 @@ class TSFileManager:
                             pass
         print("Download Completed!")
 
-    # Merge all .ts file into one file
     def mergeTS(self):
+        """Merge all .ts file into one file"""
         tsDir = natsorted(os.listdir(self.ts_dir))
 
         with open(self.output_ts_file, "wb+") as f:
@@ -68,14 +77,25 @@ class TSFileManager:
 
         print("Merging Completed!")
 
-    # Load yaml file
     def yamlLoader(self, yaml_path: str = "config.yaml") -> str:
+        """Load yaml file and get video-id
+
+        Args:
+            yaml_path (str, optional): filename to be saved. Defaults to "config.yaml".
+
+        Returns:
+            str: video-id
+        """
         with open(yaml_path, "r") as f:
             config = yaml.load(f, Loader=yaml.FullLoader)
             return str(config["streamId"])
 
-    # Create mp4 from .ts
     def createMP4(self, verbose: bool = False):
+        """Create mp4 from .ts
+
+        Args:
+            verbose (bool, optional): Is it shown info?. Defaults to False.
+        """
         command = "ffmpeg -i {} -c:v copy -c:a copy {}".format(
             self.output_ts_file, self.output_mp4_file
         )
@@ -84,8 +104,8 @@ class TSFileManager:
         if verbose:
             print(res)
 
-    # Remove all .ts file
     def deleteCache(self):
+        """Remove all .ts file"""
         for filename in os.listdir(self.ts_dir):
             if filename.endswith(".ts"):
                 os.remove("{}/{}".format(self.ts_dir, filename))

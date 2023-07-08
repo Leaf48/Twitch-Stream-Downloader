@@ -5,15 +5,15 @@ from src.TSfile import TSFileManager
 if __name__ == "__main__":
     videoId = TSFileManager.yamlLoader("config.yaml")
 
-    twitch = TwitchStream()
-    twitch_url = twitch.downloadM3U8List("{}".format(videoId))
+    twitch = TwitchStream(videoId=videoId, playlist_file="./playlist.m3u8")
+    twitch_url = twitch.downloadM3U8List()
 
     tsm = TSFileManager(
         url=twitch_url,
         ts_dir="./ts_files",
         playlist_file="./playlist.m3u8",
         output_ts_file="./output.ts",
-        output_mp4_file="./output.mp4",
+        output_mp4_file="./original.mp4",
     )
 
     tsm.downloadTS()
