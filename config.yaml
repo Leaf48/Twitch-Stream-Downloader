@@ -1,1 +1,6 @@
 streamId: 1863077987
+files:
+  ts-directory: "./ts_files"
+  ts-output-file: "./output.ts"
+  mp4-output-file: "./original.mp4"
+  playlist-file: "./playlist.m3u8"

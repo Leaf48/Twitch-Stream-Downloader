@@ -77,18 +77,18 @@ class TSFileManager:
 
         print("Merging Completed!")
 
-    def yamlLoader(self, yaml_path: str = "config.yaml") -> str:
-        """Load yaml file and get video-id
+    # def yamlLoader(self, yaml_path: str = "config.yaml") -> str:
+    #     """Load yaml file and get video-id
 
-        Args:
-            yaml_path (str, optional): filename to be saved. Defaults to "config.yaml".
+    #     Args:
+    #         yaml_path (str, optional): filename to be saved. Defaults to "config.yaml".
 
-        Returns:
-            str: video-id
-        """
-        with open(yaml_path, "r") as f:
-            config = yaml.load(f, Loader=yaml.FullLoader)
-            return str(config["streamId"])
+    #     Returns:
+    #         str: video-id
+    #     """
+    #     with open(yaml_path, "r") as f:
+    #         config = yaml.load(f, Loader=yaml.FullLoader)
+    #         return str(config["streamId"])
 
     def createMP4(self, verbose: bool = False):
         """Create mp4 from .ts
